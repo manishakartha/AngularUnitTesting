@@ -7,7 +7,7 @@ describe('Calculator Service',()=>{
     let loggerSpy:any;
     beforeEach(()=> {
 
-        console.log("Calling beforeEach");
+        // console.log("Calling beforeEach");
 
         loggerSpy = jasmine.createSpyObj('LoggerService', ["log"]);
 
