@@ -37,6 +37,7 @@ export class CourseComponent implements OnInit, AfterViewInit {
     ngOnInit() {
 
         this.course = this.route.snapshot.data["course"];
+        console.log("snapshot",this.course)
 
         this.dataSource = new LessonsDataSource(this.coursesService);
 
@@ -56,6 +57,7 @@ export class CourseComponent implements OnInit, AfterViewInit {
                     this.paginator.pageIndex = 0;
 
                     this.loadLessonsPage();
+                    
                 })
             )
             .subscribe();
