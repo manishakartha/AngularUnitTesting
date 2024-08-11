@@ -8,6 +8,8 @@ import {sortCoursesBySeqNo} from '../home/sort-course-by-seq';
 import {Course} from '../model/course';
 import {setupCourses} from '../common/setup-test-data';
 import { title } from 'process';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { of } from 'rxjs';
 
 let component:CoursesCardListComponent;
 let fixture :   ComponentFixture<CoursesCardListComponent>
@@ -16,7 +18,17 @@ let el:DebugElement
 describe('CoursesCardListComponent', () => {
   beforeEach(waitForAsync(()=>{
     TestBed.configureTestingModule({
-      imports:[CoursesModule]
+      imports:[CoursesModule,MatDialogModule],
+      providers: [
+        {
+          provide: MatDialog,
+          useValue: {
+            open: jasmine.createSpy('open').and.returnValue({
+              afterClosed: () => of(true)
+            })
+          }
+        }
+      ]
     }).compileComponents()
     .then(()=>{
       fixture = TestBed.createComponent(CoursesCardListComponent);
@@ -56,8 +68,18 @@ describe('CoursesCardListComponent', () => {
     expect(image.nativeElement.src).toBe(course.iconUrl);
 
   });
+  it("should open dialog and emit event on course edit",()=>{
+    const dialogSpy = TestBed.inject(MatDialog).open as jasmine.Spy;
+    spyOn(component.courseEdited, 'emit');
+    const course = setupCourses()[0];
+    component.editCourse(course);
+    expect(dialogSpy).toHaveBeenCalled();
+    expect(dialogSpy.calls.mostRecent().args[1].data).toBe(course);
 
+    fixture.detectChanges();
+    expect(component.courseEdited.emit).toHaveBeenCalled();
 
-});
+  });
+})
 
 
