@@ -51,9 +51,21 @@ describe("course-dialog",()=>{
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should call coursesService.saveCourse and close the dialog on save', () => {
-    mockCoursesService.saveCourse.and.returnValue(of({}));
-    component.save();
-    expect(mockCoursesService.saveCourse).toHaveBeenCalledWith
+ it("should open the dialog box and close on save",()=>{
+  mockCoursesService.saveCourse.and.returnValue(of({}));
+  component.save();
+  expect(mockCoursesService.saveCourse).toHaveBeenCalledWith(mockCourse.id,{
+    titles: {
+      description: component.form.value.description,
+      longDescription: component.form.value.longDescription
+    }
   });
+  expect(mockDialogRef.close).toHaveBeenCalledWith(component.form.value);
+ });
+ 
+  it("should close the dialog ref",()=>{
+    component.close();
+     expect(mockDialogRef.close).toHaveBeenCalled();
+  });
+  
 })
